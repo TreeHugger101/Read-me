@@ -1,0 +1,93 @@
+sudo apt update && sudo apt upgrade -y
+sudo apt install build-essential cmake git pkg-config -y
+
+sudo apt install libopencv-dev -y
+
+sudo apt install libceres-dev -y
+
+sudo apt install libeigen3-dev libgflags-dev libgoogle-glog-dev libyaml-cpp-dev -y
+
+sudo apt update
+sudo apt install cmake
+sudo apt update
+sudo apt install libeigen3-dev
+sudo apt install libgl1-mesa-dev libegl1-mesa-dev
+sudo apt install libepoxy-dev
+sudo apt install python3-dev
+
+git clone https://github.com/stevenlovegrove/Pangolin.git
+cd Pangolin && mkdir build && cd build
+cmake ..
+make -j$(nproc)
+sudo make install
+
+sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu focal main" > /etc/apt/sources.list.d/ros-latest.list'
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
+sudo apt update
+sudo apt install ros-noetic-desktop-full -y
+source /opt/ros/noetic/setup.bash
+# Add to ~/.bashrc:
+echo "source /opt/ros/noetic/setup.bash" >> ~/.bashrc
+
+sudo apt update
+sudo apt install ros-noetic-catkin -y
+sudo apt update
+sudo apt install python3-catkin-tools python3-osrf-pycommon python3-catkin-pkg -y
+sudo apt install python3-catkin-tools -y
+
+sudo apt update
+sudo apt install python3-catkin-tools python3-catkin-pkg python3-osrf-pycommon -y
+
+mkdir -p ~/catkin_ws/src
+cd ~/catkin_ws
+catkin build
+
+echo "source ~/catkin_ws/devel/setup.bash" >> ~/.bashrc
+source ~/.bashrc
+
+cd ~/catkin_ws/src
+git clone https://github.com/luohongk/SuperVINS.git
+
+cd ~/catkin_ws/src/SuperVINS
+chmod +x download_data.sh
+./download_data.sh
+
+{
+file:vins_estimator\CMakeLists.txt , supervins_loop_fusion\CMakeLists.txt , camera_models\CMakeLists.txt change path
+set(ONNXRUNTIME_ROOTDIR "/home/aman/onnxruntime-linux-x64-gpu-1.16.3")
+find_package(Ceres REQUIRED PATHS "/usr/lib/x86_64-linux-gnu/cmake/Ceres")
+
+}
+
+mkdir -p ~/catkin_ws/Thirdparty
+cp /mnt/c/Users/amann/Downloads/onnxruntime-linux-x64-gpu-1.16.3.tgz ~/catkin_ws/Thirdparty/
+cd ~/catkin_ws/Thirdparty
+tar -xvzf onnxruntime-linux-x64-gpu-1.16.3.tgz
+mv onnxruntime-linux-x64-gpu-1.16.3 onnxruntime
+
+
+cd ~/catkin_ws
+catkin_make --force-cmake --make-args VERBOSE=1
+
+sudo apt install -y nvidia-cuda-toolkit
+
+cp /mnt/c/Users/amann/Downloads/MH_01_easy.bag ~/catkin_ws/src/SuperVINS/data/
+wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-keyring_1.1-1_all.deb
+sudo dpkg -i cuda-keyring_1.1-1_all.deb
+sudo apt update
+wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-keyring_1.1-1_all.deb
+sudo dpkg -i cuda-keyring_1.1-1_all.deb
+sudo apt update
+sudo rm -f cuda-keyring_1.1-1_all.deb
+sudo apt install -y libcublas-11-0 libcublas-dev-11-0
+export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH
+echo 'export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH' >> ~/.bashrc
+sudo apt update
+sudo apt install -y libcublas-11-0 libcublas-dev-11-0
+sudo apt install -y cuda-toolkit-11-8
+
+
+roscore
+rosbag play ~/catkin_ws/src/SuperVINS/data/MH_01_easy.bag --clock
+roslaunch supervins supervins_rviz.launch
+rosrun supervins supervins_node ~/catkin_ws/src/SuperVINS/config/euroc/euroc_mono_imu_config.yaml

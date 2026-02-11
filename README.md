@@ -1,5 +1,4 @@
-[https://www.overleaf.com/read/bhsymfqmrfgp#2e006f
-com/8996316972spgzgdqczfbz#11fb2c](https://dergipark.org.tr/en/download/article-file/2835123)
+
 ###############################################
 # 1. ON THE ONLINE SYSTEM (with internet)
 ###############################################
@@ -244,6 +243,8 @@ cmake .. \
   -D CMAKE_INSTALL_PREFIX=/home/aman/local_libs
 
 make -j$(nproc)
+
+https://drive.google.com/file/d/1xf04DddtUEOQ1vZNpZ1j3lH2rg1iaedy/view?usp=drive_link
 make install
 
 
